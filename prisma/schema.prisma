@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum StaffRole {
+  DOCTOR
+  NURSE
+  PHARMACIST
+  RECEPTIONIST
+  LAB_TECHNICIAN
+  ADMINISTRATOR
+}
+
+enum StaffStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model StaffProfile {
+  id String @id @default(cuid())
+
+  employeeCode String @unique
+
+  firstName String
+  lastName  String
+
+  email String? @unique
+  phone String
+
+  role StaffRole
+
+  status StaffStatus @default(ACTIVE)
+
+  departmentId String?
+
+  specialization String?
+  licenseNumber String? @unique
+
+  dateOfBirth DateTime?
+
+  joiningDate DateTime
+
+  address String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
+  @@index([status])
+  @@index([departmentId])
+  @@index([lastName])
+  @@map("staff_profiles")
+}
